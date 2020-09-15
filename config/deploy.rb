@@ -3,7 +3,7 @@ lock '3.14.1'
 
 set :application, 'demo_deployment'
 
-set :repo_url, ''
+set :repo_url, 'git@github.com:omer-algreeb/demo_deployment.git'
 
 set :deploy_to, '/var/www/html/demo_deployment'
 
