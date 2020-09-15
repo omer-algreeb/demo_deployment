@@ -236,7 +236,7 @@ DEPENDENCIES
   capistrano-rvm
   capistrano3-puma
   jbuilder (~> 2.7)
-  listen (~> 3.2)
+  listen
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.2)
