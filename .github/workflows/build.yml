@@ -1,36 +1,20 @@
 name: CI
 on: [push, pull_request]
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    services:
-      db:
-        image: postgres:11
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup Ruby
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.7.x
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install
-      - name: Build and ran tests
-        env:
-          DATABASE_URL: postgresql://postgres@localhost/test?encoding=utf8
-          RAILS_ENV: test
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-        run: |
-          sudo apt-get -yqq install libpq-dev
-          gem install bundler
-          bundle install --jobs 4 --retry 3
-          bundle exec rails db:prepare
 
-        # bundle exec rails test # if use unit test
-        # bundle exec rails db:schema:load spec # if use rspec test
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@ec106b438a1ff6ff109590de34ddc62c540232e0
+      with:
+        ruby-version: 2.7.0
+    - name: Install dependencies
+      run: |
+        checkout
+        cache restore
+        sem-version ruby 2.7.0
+        bundle install --deployment -j 4 --path vendor/bundle
+        yarn install --pure-lockfile
+        cache store
