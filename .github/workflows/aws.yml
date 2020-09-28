@@ -56,8 +56,6 @@ jobs:
         ECR_REPOSITORY: my-ecr-repo
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        checkout
-        cache restore
         bundle update --bundler
         bundle install
         gem install capistrano -v 3.14.1
