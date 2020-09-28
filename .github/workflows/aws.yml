@@ -26,7 +26,7 @@
 on:
   push:
     branches: [ master ]
-    
+
 name: Deploy to Amazon ECS
 
 jobs:
@@ -56,12 +56,14 @@ jobs:
         ECR_REPOSITORY: my-ecr-repo
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        checkout
+        cache restore
+        bundle update --bundler
+        bundle install
+        gem install capistrano -v 3.14.1
+        cap staging deploy
+        echo "make push"
+
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
