@@ -5,7 +5,9 @@ set :application, 'demo_deployment'
 
 set :repo_url, 'git@github.com:omer-algreeb/demo_deployment.git'
 
-set :deploy_to, '/var/www/html/demo_deployment'
+set :rails_env, fetch(:stage)
+
+set :deploy_to, "/var/www/html/#{fetch(:application)}_#{fetch(:stage)}"
 
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/master.key')
 
